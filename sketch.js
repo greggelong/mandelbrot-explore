@@ -157,7 +157,7 @@ function showmandel() {
 
       } else {
         if (mycheckbox.checked()){
-          fill(100-col);
+          fill(64-col);
 
         }else{
         fill(col % 64, 100, 100); // modulo that color number
