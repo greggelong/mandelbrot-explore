@@ -6,6 +6,7 @@ let maxx = 1;
 let minx = -2;
 let maxy = 1.5;
 let miny = -1.5;
+let zoom = 0.1;
 
 
 function setup() {
@@ -15,7 +16,7 @@ function setup() {
   myslider = createSlider(1, 5, 2);
   myslider.changed(showmandel);
   backButton = createButton("Back to start");
-  backButton.mousePressed(keyPressed);
+  backButton.mousePressed(resetMand);
   showmandel();
 }
 
@@ -69,30 +70,65 @@ function mouseClicked() {
   if (mouseY <= height) { // so the slider works.the slider is off the 
     // canvas so only update to mouse position
     // when clicked on the cavas
-    let newminx = minx;
-    let newminy = miny;
-    newminx = map(mouseX, 0, width, minx, maxx);
-    maxx = newminx + 0.1;
-    minx = newminx;
+  let x = map(mouseX, 0, width, minx, maxx);  // set the x on complex plane
+  let y = map(mouseY, 0, height, miny, maxy); // s
+  // center and zoom those coordinates
+  maxx = x+zoom;
+  minx = x-zoom;
+  maxy = y+zoom;
+  miny = y-zoom;
 
-    newminy = map(mouseY, height,0, miny, maxy);// n.b. height for y is in negative
+  zoom*=0.5;
+  if (zoom<0.00001) {
+    zoom=1;
+    maxx =MN;
+    minx=-MN;
+    maxy=MN;
+    miny=-MN;
+  }
+  
+  mypara.html(`real part min ${minx} imaginary part min  ${miny}`)
+  showmandel();
 
-    maxy = newminy + 0.1;
-    miny = newminy;
-    mypara.html(`real part min ${minx} imaginary part min  ${miny}`)
-    console.log(minx, miny);
     showmandel();
   }
 
 }
 
-
-
-function keyPressed() {
+function resetMand(){
   maxx = 1;
   minx = -2;
   maxy = 1.5;
   miny = -1.5;
+  zoom = 0.1;
+  showmandel();
+}
+
+
+
+function keyPressed() {
+  /*maxx = 1;
+  minx = -2;
+  maxy = 1.5;
+  miny = -1.5;*/
+
+  let x = map(mouseX, 0, width, minx, maxx);  // set the x on complex plane
+  let y = map(mouseY, 0, height, miny, maxy); // s
+  // center and zoom those coordinates
+  maxx = x+zoom;
+  minx = x-zoom;
+  maxy = y+zoom;
+  miny = y-zoom;
+
+  zoom*=0.5;
+  if (zoom<0.00001) {
+    zoom=1;
+    maxx =MN;
+    minx=-MN;
+    maxy=MN;
+    miny=-MN;
+  }
+  
   mypara.html(`real part min ${minx} imaginary part min  ${miny}`)
   showmandel();
 
@@ -107,7 +143,7 @@ function showmandel() {
 
       let a = map(x, 0, width, minx, maxx); //real part
       //let a = map(x, 0, width, -0.25,0.25); //real part
-      let b = map(y, height, 0, miny, maxy); // imaginary part n.b. height for y is min 
+      let b = map(y, 0, height, miny, maxy); // imaginary part n.b. height for y is min 
       // let b = map(y, 0, height,-1,-0.5); // imaginary part
       let col = mandelbrot([a, b], 100);
       if (col == 100) {
