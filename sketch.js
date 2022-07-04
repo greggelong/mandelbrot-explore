@@ -2,6 +2,7 @@ let sz;
 let backButton;
 let myslider;
 let mypara;
+let mycheckbox;
 let maxx = 1;
 let minx = -2;
 let maxy = 1.5;
@@ -11,12 +12,17 @@ let zoom = 0.1;
 
 function setup() {
   createCanvas(400, 400);
-  colorMode(HSB);
+  colorMode(HSB,64);
+  noStroke();
   mypara = createP(`real part min ${minx} imaginary part min  ${miny}`)
   myslider = createSlider(1, 5, 2);
   myslider.changed(showmandel);
   backButton = createButton("Back to start");
   backButton.mousePressed(resetMand);
+  mycheckbox = createCheckbox("b&w", false)
+  mycheckbox.changed(showmandel);
+  print(mycheckbox.value())
+
   showmandel();
 }
 
@@ -147,15 +153,18 @@ function showmandel() {
       // let b = map(y, 0, height,-1,-0.5); // imaginary part
       let col = mandelbrot([a, b], 100);
       if (col == 100) {
-        stroke(0); // in the set
+        fill(0); // in the set
 
       } else {
+        if (mycheckbox.checked()){
+          fill(100-col);
 
-        stroke(col * 30 % 255, 255, 255); // modulo that color number
-        //stroke(255-15*col,255,255);
+        }else{
+        fill(col % 64, 100, 100); // modulo that color number
+        }
 
       }
-      point(x, y)
+      rect(x, y,sz+1,sz+1)
 
 
     }
